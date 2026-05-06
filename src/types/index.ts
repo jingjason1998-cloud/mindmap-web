@@ -26,6 +26,8 @@ export interface MindNode {
   width: number;
   height: number;
   collapsed?: boolean;
+  /** 由 layout 引擎计算，表示该节点是否因祖先被折叠而需要隐藏 */
+  _hidden?: boolean;
   style?: NodeStyle;
   data?: NodeData;
   children: string[];

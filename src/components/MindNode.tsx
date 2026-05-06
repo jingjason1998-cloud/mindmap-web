@@ -19,13 +19,16 @@ export function MindNode({ node, isSelected }: MindNodeProps) {
     nodes,
   } = useMindMapStore();
 
-  // 兜底：如果某个祖先被折叠了，这个节点不渲染
+  // 主防御：layout 引擎已标记 _hidden
+  if (node._hidden) {
+    return null;
+  }
+  // 兜底：如果运行时数据不一致，再做一次祖先检查
   let current = node;
   while (current.parentId) {
     const parent = nodes[current.parentId];
     if (!parent) break;
     if (parent.collapsed) {
-      console.log(`[MindNode] 节点 "${node.text}" 被隐藏，因为父节点 "${parent.text}" collapsed=${parent.collapsed}`);
       return null;
     }
     current = parent;

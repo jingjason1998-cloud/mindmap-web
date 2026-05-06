@@ -334,13 +334,17 @@ export function calculateTreeLayout(
     }
   }
 
-  // 兜底：被折叠的子树节点坐标与父节点重叠，防止意外渲染
+  // 先清除所有 _hidden 标志，再根据当前折叠状态重新标记
+  Object.values(result).forEach(node => {
+    delete node._hidden;
+  });
+
+  // 标记被折叠子树中的所有节点为隐藏（由渲染层统一过滤，不依赖运行时祖先遍历）
   Object.values(result).forEach(node => {
     if (node.parentId) {
       const parent = result[node.parentId];
       if (parent && parent.collapsed) {
-        node.x = parent.x;
-        node.y = parent.y;
+        node._hidden = true;
       }
     }
   });

@@ -317,16 +317,12 @@ export function MindMapCanvas() {
       {/* 实时计算可见节点（不缓存，确保折叠状态立即生效） */}
       {(() => {
         const allNodes = Object.values(nodes);
+        // 使用 layout 引擎计算的 _hidden 标志过滤，不依赖运行时祖先遍历
         const visibleNodeList = allNodes.filter((node) => {
-          let current = node;
-          while (current.parentId) {
-            const parent = nodes[current.parentId];
-            if (!parent) break;
-            if (parent.collapsed) return false;
-            current = parent;
-          }
-          return true;
-        }).filter(node => !viewportBounds || isNodeInViewport(node, viewportBounds));
+          if (node._hidden) return false;
+          if (!viewportBounds) return true;
+          return isNodeInViewport(node, viewportBounds);
+        });
 
         const visibleNodeIds = new Set(visibleNodeList.map(n => n.id));
 
