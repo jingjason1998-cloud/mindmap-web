@@ -1,0 +1,15 @@
+name = "mindmap-web"
+compatibility_date = "2025-01-01"
+
+# Cloudflare Pages 配置
+[site]
+bucket = "./dist"
+
+# SPA 路由回退：所有路径都回退到 index.html
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+
+# 自定义域名（部署后在 Dashboard 绑定）
+# routes = [{ pattern = "jasonxspace.com", custom_domain = true }]
